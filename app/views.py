@@ -24,7 +24,7 @@ def test_db():
     conn = mysql.connect()
     cursor = conn.cursor()
 
-    cursor.execute('select * from mytable')
+    cursor.execute('select * from patient')
     d = cursor.fetchall()
 
     cursor.close()

@@ -1,0 +1,8 @@
+# Start Server
+mysql.server start
+
+# Stop Server
+mysql.server stop
+
+# connect from terminal
+mysql -u root -p
