@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,TextAreaField,PasswordField,DateField
+from wtforms import StringField,TextAreaField,PasswordField
 from wtforms.validators import InputRequired
 
 class RegForm(FlaskForm):
@@ -14,7 +14,7 @@ class MedForm(FlaskForm):
     emp_id = StringField('Employee ID', validators=[InputRequired()]),
     p_id = StringField('Patient ID', validators=[InputRequired()]),
     disease_id = StringField('Disease ID', validators=[InputRequired()]),
-    ddate = DateField('Date', format='%Y-%m-%d',validators=[InputRequired()])
+    ddate = StringField('Date',validators=[InputRequired()])
     
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
@@ -37,4 +37,4 @@ class PatientForm(FlaskForm):
 class GetNursesForm(FlaskForm):
     first_name = StringField('First Name', validators=[InputRequired()])
     last_name = StringField('Last Name', validators=[InputRequired()])
-    date = DateField('Date', format='%Y-%m-%d',validators=[InputRequired()])
+    date = StringField('Date',validators=[InputRequired()])

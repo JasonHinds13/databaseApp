@@ -9,12 +9,6 @@ def home():
     """Render website's home page."""
     return render_template('home.html')
 
-
-@app.route('/about/')
-def about():
-    """Render the website's about page."""
-    return render_template('about.html', name="Mary Jane")
-
 @app.route('/addpatient', methods=['POST', 'GET'])
 def addpatient():
     form = RegForm()
