@@ -3,11 +3,11 @@
 {% block main %}
   <div class="form-login" method="post">
     <h2></h2>
-    <form action="{{ url_for('meddata') }}" method="post">
+    <form action="{{ url_for('medical') }}" method="post">
       {{ form.csrf_token }}
       <div class="form-group">
         {{ form.emp_id.label }}
-        {{ form.emp_id(class='form-control', placeholder="Diagnosis") }}
+        {{ form.emp_id(class='form-control', placeholder="Employee ID") }}
       </div>
       <div class="form-group">
         {{ form.p_id.label }}

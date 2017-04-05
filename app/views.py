@@ -202,7 +202,7 @@ def login():
         else:
             if "doc" in form.username.data:
                 session['doc'] = True
-            elif "nur" in form.user.data:
+            elif "nur" in form.username.data:
                 session['nur'] = True
             elif "sec" in form.username.data:
                 session['sec'] = True
@@ -210,12 +210,15 @@ def login():
             session['logged_in'] = True
             
             flash('You were logged in')
-            return redirect(url_for('add_file'))
+            return redirect(url_for('home'))
     return render_template('login.html', form=form)
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
+    session.pop('doc', None)
+    session.pop('nur', None)
+    session.pop('sec', None)
     flash('You were logged out')
     return redirect(url_for('home'))
 
