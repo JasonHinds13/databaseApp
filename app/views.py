@@ -118,6 +118,21 @@ def allergens():
         
     return render_template('allergens.html',form=form)
 
+#Procedure c  
+@app.route('/algmed', methods=["GET"])
+def algmed():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+            
+    stmt = "call mostAllergic"
+    cursor.execute(stmt)
+    res = cursor.fetchall()
+            
+    cursor.close()
+    conn.close()
+            
+    return "People Most Allergic to: " + "<br/><ul>" + "".join([test[0] for test in res]) + "</ul>"
+    
 # Procedure d    
 @app.route('/results', methods=["GET","POST"])
 def results():
