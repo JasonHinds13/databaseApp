@@ -78,7 +78,7 @@ def medical():
 def reports():
     return render_template('reports.html')
 
-#Procedure     
+#Procedure a    
 @app.route('/diagnosis', methods=["GET","POST"])
 def diagnosis():
     form = DiagnosisForm()
@@ -131,7 +131,7 @@ def algmed():
     cursor.close()
     conn.close()
             
-    return "People Most Allergic to: " + "<br/><ul>" + "".join([test[0] for test in res]) + "</ul>"
+    return "Most people are allergic to: " + "<br/><ul>" + "".join(["<li>"+test[0]+"</li>" for test in res]) + "</ul>"
     
 # Procedure d    
 @app.route('/results', methods=["GET","POST"])
@@ -152,7 +152,22 @@ def results():
         
     return render_template('results.html',form=form)
         
-
+#Procedure f  
+@app.route('/interns', methods=["GET"])
+def interns():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+            
+    stmt = "call getInterns"
+    cursor.execute(stmt)
+    res = cursor.fetchall()
+            
+    cursor.close()
+    conn.close()
+            
+    return "These Interns treated the most patients: " + "<br/><ul>" + "".join(["<li>"+test[0]+"</li>" for test in res]) + "</ul>"
+    
+    
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     error = None
