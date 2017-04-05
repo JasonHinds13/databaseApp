@@ -15,68 +15,72 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
-@app.route('/test', methods=['POST', 'GET'])
-def test_db():
-    #if not session.get('logged_in'):
-        #abort(401)
-
-    #cursor = mysql.get_db().cursor()
-    
-    conn = mysql.connect()
-    cursor = conn.cursor()
-
-    cursor.execute('select * from patient')
-    d = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return str(d)
-    
-@app.route('/register', methods=['POST', 'GET'])
-def register():
-    reg_form = RegForm(request.form)
+@app.route('/addpatient', methods=['POST', 'GET'])
+def addpatient():
+    form = RegForm()
     
     if request.method == "POST":
-        if reg_form.validate_on_submit():
-            user_name = reg_form.name.data
-            user_email = reg_form.email.data
-            subject = reg_form.subject.data
-            msg = reg_form.message.data
-            
-            conn = mysql.connect()
-            cursor = conn.cursor()
-            cursor.execute('insert into  * from patient')
-            d = cursor.fetchall()
-            cursor.close()
-            conn.close()
-            
-            return redirect(url_for('home'))
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        
+        stmt = "insert into patient(first_name,last_name,phone_num,address,sex,dob) values('{}','{}','{}','{}','{}','{}')".format(form.first_name.data,form.last_name.data,form.phone_num.data,form.address.data,form.sex.data,form.dob.data)
+        
+        cursor.execute(stmt)
+        cursor.commit()
+
+        cursor.close()
+        conn.close()
+        return "Entered!"
+        
+    return render_template('addPatient.html', form=form)
     
-    return render_template('contact.html', form=reg_form)
+@app.route('/listpatients', methods=['GET'])
+def listpatients():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute('select  * from patient')
+    d = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return str(res)
+    
+@app.route('/listdocs', methods=['GET'])
+def listdocs():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute('select  * from doctor')
+    d = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return str(res)
+    
+@app.route('/listnurses', methods=['GET'])
+def listnurses():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute('select  * from nurse')
+    d = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return str(res)
     
 @app.route('/meddata')
 def medical():
     form = MedForm()
     
     if request.method == "POST":
-        if med_form.validate_on_submit():
+        if form.validate_on_submit():
             conn = mysql.connect()
             cursor = conn.cursor()
             
-            stmt = "insert into diagnosis(emp_id int,p_id,disease_id,ddate) values('{}','{}','{}','{}')".format(form.emp_id.data,form.p_id.data,form.disease_id.data,form.ddate.data)
+            stmt = "insert into diagnosis(emp_id,p_id,disease_id,ddate) values('{}',{},{},'{}')".format(form.emp_id,form.p_id,form.disease_id,form.ddate)
             cursor.execute(stmt)
-            res = cursor.fetchall()
+            cursor.commit()
             
             cursor.close()
             conn.close()
     
     return render_template('meddata.html', form=form)
-    
-
-@app.route('/reports')
-def reports():
-    return render_template('reports.html')
 
 #Procedure a    
 @app.route('/diagnosis', methods=["GET","POST"])
@@ -151,6 +155,26 @@ def results():
             return "Results: " + str(res)
         
     return render_template('results.html',form=form)
+    
+#Procedure e   
+@app.route('/adminnurse', methods=["GET","POST"])
+def adminnurse():
+    form = GetNursesForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            
+            stmt = "call getNurses('{}','{}','{}')".format(form.first_name.data,form.last_name.data,form.date.data)
+            cursor.execute(stmt)
+            res = cursor.fetchall()
+            
+            cursor.close()
+            conn.close()
+            
+            return "<ul>" + "".join(["<li>" + item[0] + " " +item[1] + "</li>" for item in res]) + "</ul>"
+        
+    return render_template('adminnurse.html',form=form)
         
 #Procedure f  
 @app.route('/interns', methods=["GET"])
@@ -173,9 +197,16 @@ def login():
     error = None
     form = LoginForm()
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME'] or request.form['password'] != app.config['PASSWORD']:
+        if request.form['password'] != app.config['PASSWORD']:
             error = 'Invalid username or password'
         else:
+            if "doc" in form.username.data:
+                session['doc'] = True
+            elif "nur" in form.user.data:
+                session['nur'] = True
+            elif "sec" in form.username.data:
+                session['sec'] = True
+                
             session['logged_in'] = True
             
             flash('You were logged in')

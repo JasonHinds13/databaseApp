@@ -3,10 +3,12 @@ from wtforms import StringField,TextAreaField,PasswordField,DateField
 from wtforms.validators import InputRequired
 
 class RegForm(FlaskForm):
-    name = StringField('Name', validators=[InputRequired()])
-    email = StringField('E-mail', validators=[InputRequired()])
-    subject = StringField('Subject', validators=[InputRequired()])
-    message = TextAreaField('Message', validators=[InputRequired()])
+    first_name = StringField('First Name', validators=[InputRequired()])
+    last_name = StringField('Last Name', validators=[InputRequired()])
+    phone_num = StringField('Phone Number', validators=[InputRequired()])
+    address = StringField('Address', validators=[InputRequired()])
+    sex = StringField('Sex', validators=[InputRequired()])
+    dob = StringField('Date of Birth', validators=[InputRequired()])
     
 class MedForm(FlaskForm):
     emp_id = StringField('Employee ID', validators=[InputRequired()]),
