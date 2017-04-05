@@ -57,19 +57,48 @@ def register():
     
 @app.route('/meddata')
 def medical():
-    med_form=MedForm(request.form)
+    form = MedForm()
     
     if request.method == "POST":
         if med_form.validate_on_submit():
-            pass
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            
+            stmt = "insert into diagnosis(emp_id int,p_id,disease_id,ddate) values('{}','{}','{}','{}')".format(form.emp_id.data,form.p_id.data,form.disease_id.data,form.ddate.data)
+            cursor.execute(stmt)
+            res = cursor.fetchall()
+            
+            cursor.close()
+            conn.close()
     
-    return render_template('meddata.html', form=med_form)
+    return render_template('meddata.html', form=form)
     
 
 @app.route('/reports')
 def reports():
     return render_template('reports.html')
+
+#Procedure     
+@app.route('/diagnosis', methods=["GET","POST"])
+def diagnosis():
+    form = DiagnosisForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            
+            stmt = "call getDiagnosisInRange('{}','{}','{}')".format(form.diagnosis.data,form.startdate.data,form.enddate.data)
+            cursor.execute(stmt)
+            res = cursor.fetchall()
+            
+            cursor.close()
+            conn.close()
+            
+            return res
+        
+    return render_template('diagnosis.html',form=form)
     
+#Procedure b    
 @app.route('/allergens', methods=["GET","POST"])
 def allergens():
     form = PatientForm()
@@ -78,16 +107,18 @@ def allergens():
             conn = mysql.connect()
             cursor = conn.cursor()
             
-            stmt = "call getAllergies({},{})".format(form.first_name.data,form.last_name.data)
+            stmt = "call getAllergies('{}','{}')".format(form.first_name.data,form.last_name.data)
             cursor.execute(stmt)
             res = cursor.fetchall()
             
             cursor.close()
             conn.close()
-            return res
+            
+            return form.first_name.data + " " + form.last_name.data + " is allergic to: " + str([item[0] for item in res])
         
     return render_template('allergens.html',form=form)
-    
+
+# Procedure d    
 @app.route('/results', methods=["GET","POST"])
 def results():
     form = PatientForm()
@@ -96,13 +127,13 @@ def results():
             conn = mysql.connect()
             cursor = conn.cursor()
             
-            stmt = "call getResults({},{})".format(form.first_name.data,form.last_name.data)
+            stmt = "call getResults('{}','{}')".format(form.first_name.data,form.last_name.data)
             cursor.execute(stmt)
             res = cursor.fetchall()
             
             cursor.close()
             conn.close()
-            return res
+            return "Results: " + str(res)
         
     return render_template('results.html',form=form)
         

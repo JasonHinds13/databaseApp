@@ -9,10 +9,10 @@ class RegForm(FlaskForm):
     message = TextAreaField('Message', validators=[InputRequired()])
     
 class MedForm(FlaskForm):
-    name = StringField('Name', validators=[InputRequired()])
-    email = StringField('E-mail', validators=[InputRequired()])
-    subject = StringField('Subject', validators=[InputRequired()])
-    message = TextAreaField('Message', validators=[InputRequired()])
+    emp_id = StringField('Employee ID', validators=[InputRequired()]),
+    p_id = StringField('Patient ID', validators=[InputRequired()]),
+    disease_id = StringField('Disease ID', validators=[InputRequired()]),
+    ddate = DateField('Date', format='%Y-%m-%d',validators=[InputRequired()])
     
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
