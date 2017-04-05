@@ -94,7 +94,7 @@ def diagnosis():
             cursor.close()
             conn.close()
             
-            return res
+            return str(res)
         
     return render_template('diagnosis.html',form=form)
     

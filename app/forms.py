@@ -23,8 +23,8 @@ class LoginForm(FlaskForm):
 # query (a)
 class DiagnosisForm(FlaskForm):
     diagnosis = StringField('Diagnosis', validators=[InputRequired()])
-    startdate = DateField('Start Date', format='%Y/%m/%d',validators=[InputRequired()])
-    enddate = DateField('End Date', format='%Y-%m-%d',validators=[InputRequired()])
+    startdate = StringField('Start Date', validators=[InputRequired()])
+    enddate = StringField('End Date', validators=[InputRequired()])
     
 # Can be used for queries (b) and (d)
 class PatientForm(FlaskForm):
