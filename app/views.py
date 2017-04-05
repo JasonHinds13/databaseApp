@@ -94,7 +94,7 @@ def diagnosis():
             cursor.close()
             conn.close()
             
-            return str(res)
+            return "<ul>" + "".join(["<li>" + item[0] + " " +item[1] + "</li>" for item in res]) + "</ul>"
         
     return render_template('diagnosis.html',form=form)
     
